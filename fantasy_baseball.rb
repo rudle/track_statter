@@ -5,12 +5,8 @@ CONSUMER_SECRET = '008221b626a980931f6b63877b4d6f2c8b681989'
 
 require 'rubygems'
 require 'oauth'
-require 'oauth/client/em_http'
-require 'em-http'
 require 'cgi'
-require 'ruby-debug'
 require 'sinatra'
-require 'rest-client'
 
 BASE_API_URL = "https://fantasysports.yahooapis.com/fantasy/v2/"
 
