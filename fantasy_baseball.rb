@@ -9,12 +9,14 @@ require 'cgi'
 require 'sinatra'
 
 BASE_API_URL = "https://fantasysports.yahooapis.com/fantasy/v2/"
+HOST = 'http://quiet-light-99.heroku.com/'
 
 get '/' do
-	$consumer = OAuth::Consumer.new(CONSUMER_KEY, CONSUMER_SECRET, :site => "https://api.login.yahoo.com/", :request_token_path => "/oauth/v2/get_request_token", :authorize_path => "/oauth/v2/request_auth", :oauth_callback => "http://localhost:4567/callback", :access_token_path => "/oauth/v2/get_token")
-	$request_token = $consumer.get_request_token({:oauth_callback => "http://localhost:4567/callback/"})
+host = HOST || 'http://localhost:4567/'
+	$consumer = OAuth::Consumer.new(CONSUMER_KEY, CONSUMER_SECRET, :site => "https://api.login.yahoo.com/", :request_token_path => "/oauth/v2/get_request_token", :authorize_path => "/oauth/v2/request_auth", :oauth_callback => "#{host}callback", :access_token_path => "/oauth/v2/get_token")
+	$request_token = $consumer.get_request_token({:oauth_callback => "#{host}callback/"})
 	session[:request_token] = $request_token
-	redirect $request_token.authorize_url({:oauth_callback => "http://localhost:4567/callback/"})
+	redirect $request_token.authorize_url({:oauth_callback => "#{host}callback/"})
 end
 
 get '*' do
