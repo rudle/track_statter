@@ -8,7 +8,9 @@ require 'oauth'
 require 'cgi'
 require 'sinatra'
 
-BASE_API_URL = "https://fantasysports.yahooapis.com/fantasy/v2/"
+require 'ruby-debug'
+
+BASE_API_URL = "http://fantasysports.yahooapis.com/fantasy/v2/"
 
 get '/' do
 	host = 'http://quiet-light-99.heroku.com/'
@@ -20,22 +22,19 @@ get '/' do
 end
 
 get '*' do
-	#{"splat"=>["/callback"], "oauth_verifier"=>"btkxte", "oauth_token"=>"evfhecf"}
-#http://fantasysports.yahooapis.com/fantasy/v2/leagues;league_keys=238.l.627060]
-	#http://fantasysports.yahooapis.com/fantasy/v2/leagues;league_keys=238.l.173220
-	#$consumer.options[:site] = "http://fantasysports.yahooapis.com/fantasy/v2/"
 
-	query = ("/leagues;league_keys=238.l.173220")
-
-	$access_token = $request_token.get_access_token({:oauth_verifier => params["oauth_verifier"], :oauth_token => params["oauth_token"]}, :request_uri => BASE_API_URL  + query)
-
+	query = ("leagues\;league_keys=238.l.173220")
 
 	begin
-		response = $access_token.get("/")
-	rescue Exception
+		$access_token = $request_token.get_access_token({:oauth_verifier => params["oauth_verifier"], :oauth_token => params["oauth_token"]})
+		uri = BASE_API_URL + query
+		resp = $access_token.get(uri)
+	rescue Exception => 
 		debugger
 	end
 
+	debugger
+	p resp.body
 	
 end
 
