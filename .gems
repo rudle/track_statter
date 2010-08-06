@@ -1,2 +1,4 @@
 oauth
+json
+activesupport
 sinatra
