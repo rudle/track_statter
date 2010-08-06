@@ -4,7 +4,7 @@ CONSUMER_KEY = 'dj0yJmk9aHd5dWwyY050WlllJmQ9WVdrOU4zVXlUVEJRTXpZbWNHbzlPVGMwTlRr
 CONSUMER_SECRET = '008221b626a980931f6b63877b4d6f2c8b681989'
 
 require 'rubygems'
-require 'activesupport'
+require 'active_support'
 require 'haml'
 require 'oauth'
 require 'cgi'
@@ -18,7 +18,7 @@ class TrackStatter < Sinatra::Base
 	set :root, File.dirname(__FILE__)
 
 	get '/' do
-		host = 'http://quiet-light-99.heroku.com/'
+		host = 'http://trackstatter.heroku.com/'
 		host = 'http://localhost:4567/'
 		$consumer = OAuth::Consumer.new(CONSUMER_KEY, CONSUMER_SECRET, :site => "https://api.login.yahoo.com/", :request_token_path => "/oauth/v2/get_request_token", :authorize_path => "/oauth/v2/request_auth", :oauth_callback => "#{host}callback", :access_token_path => "/oauth/v2/get_token")
 		$request_token = $consumer.get_request_token({:oauth_callback => "#{host}callback/"})
@@ -45,7 +45,7 @@ class TrackStatter < Sinatra::Base
 
 		user = users[user_id]['user'].last
 
-		team_id = (user['teams']['count'] -1).to_s
+		team_id = (user['teams']['count'] - 1).to_s
 
 		team = user['teams'][team_id]['team']
 		@team_key = team_key = team.first.first['team_key']
@@ -56,16 +56,22 @@ class TrackStatter < Sinatra::Base
 
 		@stats = team_stats
 
-		nice_stats = @stats.inject({}) do |result, stat| 
-			result[stat['stat']['stat_id']] = stat['stat']['value']
-		end
-
-
+		todays_stats = team_stats(true) - team_stats(false)
 
 		#data['fantasy_content']['users']['0']['user'].last['teams']['2']['team'].join("<br/>")
+		stat_categories = scores['fantasy_content']['league'][1]['settings'].first['stat_categories']['stats'].group_by { |stat| stat['stat']['stat_id'] }
 
+		todays_stats.to_json
+		output_stats(todays_stats, stat_categories).join("<br/>")
+	end
+
+	def output_stats stats, stat_info
 		debugger
-		local_stats.to_json
+		stats.map do |stat|
+			id = stat['stat']['stat_id']
+			info = stat_info[id].first['stat']
+			{:name => info['display_name'], :value => stat['stat']['value']}.to_json
+		end
 	end
 
 	def league_teams
@@ -105,8 +111,8 @@ class TrackStatter < Sinatra::Base
 
 	end
 
-	def team_stats ytd = false
-		make_query("team/#{@team_key}/stats;type=date;date=" + (ytd ? Time.now.strftime("%Y-%m-%d") : 1.day.ago.strftime("%Y-%m-%d")))['fantasy_content']['team'].last['team_stats']['stats'].sort_by {|stat| stat['stat']['stat_id'] }
+	def team_stats include_today = false
+		make_query("team/#{@team_key}/stats;type=date;date=" + (include_today ? Time.now.strftime("%Y-%m-%d") : 1.day.ago.strftime("%Y-%m-%d")))['fantasy_content']['team'].last['team_stats']['stats'].sort_by {|stat| stat['stat']['stat_id'] }
 	end
 
 	def scoring_settings
@@ -135,7 +141,6 @@ class TrackStatter < Sinatra::Base
 
 		ret
 	end
-
 
 end
 
