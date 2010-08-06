@@ -2,3 +2,4 @@ oauth
 json
 activesupport
 sinatra
+haml
