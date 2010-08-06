@@ -11,8 +11,6 @@ require 'cgi'
 require 'json' 
 require 'sinatra'
 
-require 'ruby-debug'
-
 class TrackStatter < Sinatra::Base
 	BASE_API_URL = "http://fantasysports.yahooapis.com/fantasy/v2/"
 	set :root, File.dirname(__FILE__)
