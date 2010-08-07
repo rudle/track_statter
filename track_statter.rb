@@ -91,7 +91,7 @@ def make_query q
 end
 
 get '/' do
-	host = 'trackstatter.heroku.com'
+	host = 'trackstatter.heroku.com/'
 	#host = 'http://localhost:4567/'
 	$consumer = OAuth::Consumer.new(CONSUMER_KEY, CONSUMER_SECRET, :site => "https://api.login.yahoo.com/", :request_token_path => "/oauth/v2/get_request_token", :authorize_path => "/oauth/v2/request_auth", :oauth_callback => "#{host}callback", :access_token_path => "/oauth/v2/get_token")
 	$request_token = $consumer.get_request_token({:oauth_callback => "#{host}callback/"})
