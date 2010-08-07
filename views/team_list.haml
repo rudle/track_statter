@@ -1,0 +1,6 @@
+- @teams.each do |team|
+	%img{:src => team['team'].first[4].values.first.first['team_logo']['url']}
+	%a{:href => "/team/#{team['team'].first[0].values.first}"} #{team['team'].first[2].values.first} =>  #{@leagues[team['team'].first[0].values.first =~ /(.*)\.t/].values.first}
+
+
+

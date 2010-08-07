@@ -11,11 +11,12 @@ require 'cgi'
 require 'json' 
 require 'sinatra'
 
+require 'ruby-debug'
+
 BASE_API_URL = "http://fantasysports.yahooapis.com/fantasy/v2/"
 #set :root, File.dirname(__FILE__)
 
 def output_stats stats, stat_info
-	debugger
 	stats.map do |stat|
 		id = stat['stat']['stat_id']
 		info = stat_info[id].first['stat']
@@ -80,6 +81,14 @@ def scoreboard
 	@scoreboard ||= make_query "league/#{@league_key}/standings\;type=date\;date=#{Time.now.strftime("%Y-%m-%d")}"
 end
 
+def user_teams
+	"users\;use_login=1/games\;game_keys=mlb/teams" 
+end
+
+def user_leagues
+	"users\;use_login=1/games\;game_keys=mlb/leagues"
+end
+
 def make_query q
 	begin
 		ret = JSON.parse($access_token.get("#{BASE_API_URL + q}?format=json").body)
@@ -97,39 +106,41 @@ get '/' do
 	$request_token = $consumer.get_request_token({:oauth_callback => "#{host}callback/"})
 	session[:request_token] = $request_token
 	redirect $request_token.authorize_url({:oauth_callback => "#{host}callback/"})
-	'foo'
 end
 
-get '*' do
-	query = "leagues\;league_keys=238.l.173220"
-	query = "users\;use_login=1/teams/standings"
-
+get '/callback' do
 	$access_token = $request_token.get_access_token({:oauth_verifier => params["oauth_verifier"], :oauth_token => params["oauth_token"]})
-	uri = BASE_API_URL + query + "\?format=json"
-	resp = $access_token.get(uri)
 
-	data = JSON.parse(resp.body)
+	team_blob =  make_query user_teams
+	league_blob = make_query user_leagues
 
-	content = data['fantasy_content']
-	users = content['users']
+user_leagues = league_blob['fantasy_content']['users']['0']['user'][1]['games']['0']['game'].last['leagues']
 
-	user_id = (users['count'] - 1).to_s
+	@leagues = (0..user_leagues['count'] - 1).map do |user_league_id|
+		league = user_leagues[user_league_id.to_s]['league'].first
+		{league['league_key'] => league['name']}
+	end
 
-	user = users[user_id]['user'].last
+	user_teams = team_blob['fantasy_content']['users']['0']['user'][1]['games']['0']['game'].last['teams']
 
-	team_id = (user['teams']['count'] - 1).to_s
+	@teams = (0..user_teams['count'] - 1).map do |user_team_id|
+		user_teams[user_team_id.to_s]
+	end
+	haml :team_list
+end
 
-	team = user['teams'][team_id]['team']
-	@team_key = team_key = team.first.first['team_key']
-	@league_key = league_key = team_key.match(/(.*)\.t/)[1]
+get '/team/*' do |team_key|
+	@team_key = team_key 
+	@league_key = team_key.match(/(.*)\.t/)[1]
 
 	teams = make_query league_teams
 	scores = make_query scoring_settings
 
-	@stats = team_stats
+	full_stats = team_stats
 
 	todays_stats = team_stats(true) - team_stats(false)
 
+	debugger
 	#data['fantasy_content']['users']['0']['user'].last['teams']['2']['team'].join("<br/>")
 	stat_categories = scores['fantasy_content']['league'][1]['settings'].first['stat_categories']['stats'].group_by { |stat| stat['stat']['stat_id'] }
 
