@@ -1,0 +1,42 @@
+<?xml version="1.0"?>
+<todo version="0.1.20">
+    <note priority="high" time="1281069931" done="1281069938">
+        2
+    </note>
+    <note priority="low" time="1281056282" done="1281056288">
+        1
+        <note priority="low" time="1281056299" done="1281056308">
+            refactor scoring settings
+        </note>
+    </note>
+    <note priority="veryhigh" time="1281055902" done="1281151239">
+        pretty-print today's stats
+        <note priority="veryhigh" time="1281055933" done="0">
+            correlate stat IDs to stat names
+        </note>
+        <note priority="low" time="1281056319" done="0">
+            refactor scoring settings
+        </note>
+    </note>
+    <note priority="veryhigh" time="1281151228">
+        cookies?
+    </note>
+    <note priority="high" time="1281054007">
+        complete stat updates
+        <note priority="medium" time="1281054016" done="1281056034">
+            
+        </note>
+    </note>
+    <note priority="high" time="1281069874">
+        remove cruft
+        <note priority="high" time="1281069888">
+            activesupport?? really?
+        </note>
+        <note priority="high" time="1281069900">
+            haml? should figure this one out
+        </note>
+    </note>
+    <note priority="medium" time="1281069963">
+        clean up commit history
+    </note>
+</todo>

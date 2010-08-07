@@ -1,2 +1,2 @@
-require 'track_statter'
+require 'track_statter.rb'
 run Sinatra::Application
