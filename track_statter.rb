@@ -11,8 +11,6 @@ require 'cgi'
 require 'json' 
 require 'sinatra'
 
-require 'ruby-debug'
-
 BASE_API_URL = "http://fantasysports.yahooapis.com/fantasy/v2/"
 #set :root, File.dirname(__FILE__)
 
@@ -93,7 +91,7 @@ def make_query q
 	begin
 		ret = JSON.parse($access_token.get("#{BASE_API_URL + q}?format=json").body)
 	rescue Exception => e
-		debugger
+		#debugger
 	end
 
 	ret
@@ -140,7 +138,6 @@ get '/team/*' do |team_key|
 
 	todays_stats = team_stats(true) - team_stats(false)
 
-	debugger
 	#data['fantasy_content']['users']['0']['user'].last['teams']['2']['team'].join("<br/>")
 	stat_categories = scores['fantasy_content']['league'][1]['settings'].first['stat_categories']['stats'].group_by { |stat| stat['stat']['stat_id'] }
 
