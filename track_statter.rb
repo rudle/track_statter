@@ -136,4 +136,3 @@ get '*' do
 	todays_stats.to_json
 	output_stats(todays_stats, stat_categories).join("<br/>")
 end
->>>>>>> got things working again
