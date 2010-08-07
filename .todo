@@ -1,20 +1,20 @@
 <?xml version="1.0"?>
 <todo version="0.1.20">
-    <note priority="high" time="1281069931" done="1281069938">
-        2
-    </note>
-    <note priority="low" time="1281056282" done="1281056288">
-        1
-        <note priority="low" time="1281056299" done="1281056308">
-            refactor scoring settings
-        </note>
-    </note>
     <note priority="veryhigh" time="1281055902" done="1281151239">
         pretty-print today's stats
         <note priority="veryhigh" time="1281055933" done="0">
             correlate stat IDs to stat names
         </note>
         <note priority="low" time="1281056319" done="0">
+            refactor scoring settings
+        </note>
+    </note>
+    <note priority="high" time="1281069931" done="1281069938">
+        2
+    </note>
+    <note priority="low" time="1281056282" done="1281056288">
+        1
+        <note priority="low" time="1281056299" done="1281056308">
             refactor scoring settings
         </note>
     </note>
@@ -36,7 +36,22 @@
             haml? should figure this one out
         </note>
     </note>
+    <note priority="high" time="1281153243">
+        player stat lines
+    </note>
     <note priority="medium" time="1281069963">
         clean up commit history
+    </note>
+    <note priority="medium" time="1281153378">
+        full team score values
+    </note>
+    <note priority="low" time="1281153215">
+        autorefresh
+    </note>
+    <note priority="low" time="1281153275">
+        include benched players?
+    </note>
+    <note priority="low" time="1281153337">
+        be sure to include all league's scoring categories - even if there are no points
     </note>
 </todo>
