@@ -63,4 +63,7 @@
     <note priority="low" time="1281153337">
         be sure to include all league's scoring categories - even if there are no points
     </note>
+    <note priority="low" time="1281224739">
+        javascript on callback page for team stats?
+    </note>
 </todo>
