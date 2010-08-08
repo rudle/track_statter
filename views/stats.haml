@@ -1,0 +1,17 @@
+:css 
+	h3 { color: #444 }
+%h2 totals
+- @todays_stats.each do |stat|
+	%strong= @stat_categories[stat['stat']['stat_id'].to_i].first['stat']['name']
+	%p= stat['stat']['value']
+
+
+%h2 players
+- @groomed_stats.each do |blob|
+	%h3= blob[:name]
+	- blob[:stats].each do |stat|
+		%strong= @stat_categories[stat['stat']['stat_id'].to_i].first['stat']['name']
+		%p= stat['stat']['value']
+	%br
+		
+	
