@@ -16,7 +16,7 @@ BASE_API_URL = "http://fantasysports.yahooapis.com/fantasy/v2/"
 
 def output_stats stats, stat_info
 	stats.map do |stat|
-		id = stat['stat']['stat_id']
+		id = stat['stat']['stat_id'].to_i
 		info = stat_info[id].first['stat']
 		{:name => info['display_name'], :value => stat['stat']['value']}.to_json
 	end
@@ -136,11 +136,18 @@ get '/team/*' do |team_key|
 
 	full_stats = team_stats
 
-	todays_stats = team_stats(true) - team_stats(false)
+	@todays_stats = team_stats(true) - team_stats(false)
+
+	players_stats = make_query "teams\;team_keys=#{@team_key}/players/stats\;type=date\;date=#{Time.now.strftime("%Y-%m-%d")}"
+	players = players_stats['fantasy_content']['teams']['0']['team'][1]['players']
+	players.delete 'count'
+	@groomed_stats = players.keys.map do |player_id| 
+		player = players[player_id.to_s]['player']
+		{:id => player[0][1], :name => player[0][2]['name']['full'], :stats => player[1]['player_stats']['stats'] } 
+	end
 
 	#data['fantasy_content']['users']['0']['user'].last['teams']['2']['team'].join("<br/>")
-	stat_categories = scores['fantasy_content']['league'][1]['settings'].first['stat_categories']['stats'].group_by { |stat| stat['stat']['stat_id'] }
-
-	todays_stats.to_json
-	output_stats(todays_stats, stat_categories).join("<br/>")
+	@stat_categories = scores['fantasy_content']['league'][1]['settings'].first['stat_categories']['stats'].group_by { |stat| stat['stat']['stat_id'] }
+	
+	haml :stats
 end
