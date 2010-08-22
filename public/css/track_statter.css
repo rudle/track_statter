@@ -1,0 +1,17 @@
+body {
+	color:#222;
+	background:#fff;
+	font-family:"Proxima Nova", Arial, Helvetica, sans-serif;
+	width: 300px;
+}
+h3 { color: #444; }
+#player_list { display: none; }
+a { text-decoration:none;}
+
+.nav > a {
+	font-size: 1.5em;
+}
+
+.nav {
+	margin-left: 80%;
+}

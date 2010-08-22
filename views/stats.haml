@@ -1,17 +1,39 @@
-:css 
-	h3 { color: #444 }
+%link{:rel => "stylesheet",  :href => "/css/track_statter.css", :type => "text/css", :media => "screen"}
+%script{:type => "text/javascript", :src => "/js/jquery-1.4.2.min.js"}
+
+:javascript 
+	$(document).ready(function() {
+		$("#list_toggle").click(function() {
+			$("#player_list").toggle('slow');
+		})
+	});
+
+
+
 %h2 totals
 - @todays_stats.each do |stat|
 	%strong= @stat_categories[stat['stat']['stat_id'].to_i].first['stat']['name']
 	%p= stat['stat']['value']
 
+%a{:href => "#", :id => 'list_toggle'}
+	%h4 player list
+%ul{:id => 'player_list'}
+	- @groomed_stats.each_with_index do |blob, id|
+		%li 
+			%a{:href => "#player_#{id}"} #{blob[:name]}
 
 %h2 players
-- @groomed_stats.each do |blob|
+- @groomed_stats.each_with_index do |blob, id|
+	%div{:id => ['player', id]}
 	%h3= blob[:name]
 	- blob[:stats].each do |stat|
 		%strong= @stat_categories[stat['stat']['stat_id'].to_i].first['stat']['name']
 		%p= stat['stat']['value']
-	%br
+	%div{:class => 'nav'}
+		- if id != 0
+			%a{:href => "#player_#{id-1}"} &uarr; 
+		&nbsp;&nbsp;&nbsp;
+		- if (id + 1) != @groomed_stats.size
+			%a{:href => "#player_#{id+1}"} &darr;
 		
 	

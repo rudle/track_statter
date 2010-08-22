@@ -4,7 +4,7 @@ CONSUMER_KEY = 'dj0yJmk9eFJSNmNqUXg2Z0dlJmQ9WVdrOU4zVXlUVEJRTXpZbWNHbzlPVGMwTlRr
 CONSUMER_SECRET = 'eb8f111d05084452b8c89f4d3bc9c523ba010861'
 
 require 'rubygems'
-require 'active_support'
+require 'chronic'
 require 'haml'
 require 'oauth'
 require 'cgi'
@@ -13,6 +13,7 @@ require 'sinatra'
 
 BASE_API_URL = "http://fantasysports.yahooapis.com/fantasy/v2/"
 #set :root, File.dirname(__FILE__)
+set :encoding => 'UTF-8' 
 
 def output_stats stats, stat_info
 	stats.map do |stat|
@@ -59,7 +60,7 @@ def combine_stats new, old, id
 end
 
 def team_stats include_today = false
-	make_query("team/#{@team_key}/stats;type=date;date=" + (include_today ? Time.now.strftime("%Y-%m-%d") : 1.day.ago.strftime("%Y-%m-%d")))['fantasy_content']['team'].last['team_stats']['stats'].sort_by {|stat| stat['stat']['stat_id'] }
+	make_query("team/#{@team_key}/stats;type=date;date=" + (include_today ? Time.now.strftime("%Y-%m-%d") : Chronic.parse('1 day ago').strftime("%Y-%m-%d")))['fantasy_content']['team'].last['team_stats']['stats'].sort_by {|stat| stat['stat']['stat_id'] }
 end
 
 def scoring_settings
@@ -98,8 +99,8 @@ def make_query q
 end
 
 get '/' do
-	host = 'trackstatter.heroku.com/'
-	#host = 'http://localhost:4567/'
+	#host = 'trackstatter.heroku.com/'
+	host = 'http://192.168.2.123:4567/'
 	$consumer = OAuth::Consumer.new(CONSUMER_KEY, CONSUMER_SECRET, :site => "https://api.login.yahoo.com/", :request_token_path => "/oauth/v2/get_request_token", :authorize_path => "/oauth/v2/request_auth", :oauth_callback => "#{host}callback", :access_token_path => "/oauth/v2/get_token")
 	$request_token = $consumer.get_request_token({:oauth_callback => "#{host}callback/"})
 	session[:request_token] = $request_token
