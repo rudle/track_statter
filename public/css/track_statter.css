@@ -4,14 +4,29 @@ body {
 	font-family:"Proxima Nova", Arial, Helvetica, sans-serif;
 	width: 300px;
 }
-h3 { color: #444; }
-#player_list { display: none; }
-a { text-decoration:none;}
 
-.nav > a {
+h3.player_name { color: #999; display: inline; padding: 25px 10px 0 0;}
+.player_stats { margin: 0 0 1450px 25px; align:center  }
+#player_list { display: none; }
+a { color: #999; }
+
+#player_list > li > a {
+	line-height:1.5em;
 	font-size: 1.5em;
 }
 
 .nav {
-	margin-left: 80%;
+	padding-top:15px;
+}
+
+ul {
+	list-style-type:none;
+}
+
+a.down { margin-right: 35px; }
+.nav > a {
+	font-size: 2.5em;
+	font-weight: bold;
+	float: right;
+	text-decoration:none;
 }

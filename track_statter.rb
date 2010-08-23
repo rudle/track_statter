@@ -113,7 +113,7 @@ get '/callback' do
 	team_blob =  make_query user_teams
 	league_blob = make_query user_leagues
 
-user_leagues = league_blob['fantasy_content']['users']['0']['user'][1]['games']['0']['game'].last['leagues']
+	user_leagues = league_blob['fantasy_content']['users']['0']['user'][1]['games']['0']['game'].last['leagues']
 
 	@leagues = (0..user_leagues['count'] - 1).map do |user_league_id|
 		league = user_leagues[user_league_id.to_s]['league'].first

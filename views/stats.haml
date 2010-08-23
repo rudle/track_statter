@@ -15,8 +15,9 @@
 	%strong= @stat_categories[stat['stat']['stat_id'].to_i].first['stat']['name']
 	%p= stat['stat']['value']
 
+%h2 player list
 %a{:href => "#", :id => 'list_toggle'}
-	%h4 player list
+	hide/show
 %ul{:id => 'player_list'}
 	- @groomed_stats.each_with_index do |blob, id|
 		%li 
@@ -24,16 +25,14 @@
 
 %h2 players
 - @groomed_stats.each_with_index do |blob, id|
-	%div{:id => ['player', id]}
-	%h3= blob[:name]
-	- blob[:stats].each do |stat|
-		%strong= @stat_categories[stat['stat']['stat_id'].to_i].first['stat']['name']
-		%p= stat['stat']['value']
-	%div{:class => 'nav'}
-		- if id != 0
-			%a{:href => "#player_#{id-1}"} &uarr; 
-		&nbsp;&nbsp;&nbsp;
-		- if (id + 1) != @groomed_stats.size
-			%a{:href => "#player_#{id+1}"} &darr;
-		
-	
+	%div{:id => ['player', id], :class => 'player_stats'}
+		%div{:class => 'nav'}
+			%h3{:class => 'player_name'}= blob[:name]
+			- if id != 0
+				%a{:href => "#player_#{id-1}"} &uArr;
+			- if (id + 1) != @groomed_stats.size
+				%a{:href => "#player_#{id+1}", :class => "down"} &dArr;
+		- blob[:stats].each do |stat|
+			%strong= @stat_categories[stat['stat']['stat_id'].to_i].first['stat']['name']
+			%p= stat['stat']['value']
+		%a{:href => "#"} top
